@@ -10,7 +10,6 @@ export default class TicketsController {
   public async index ({ view }: HttpContextContract) {
     const tickets = await Ticket.all()
     const types = await TypeTicket.all()
-    const ticketArr = []
     const arrOpenTickets = []
     const arrClosedTickets = []
 
