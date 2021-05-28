@@ -1,7 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
 import Application from '@ioc:Adonis/Core/Application'
-import Database from '@ioc:Adonis/Lucid/Database'
 
 import TypeTicket from 'App/Models/TypeTicket'
 import Ticket from 'App/Models/Ticket'

@@ -58,6 +58,8 @@ Route.group(() => {
 
   Route.get('/registeruser/new', 'AuthController.index').as('register.index')
   Route.post('/registeruser/new', 'AuthController.store').as('users.store')
+
+  Route.get('/', 'UsersController.index').as('users.index')
 })
 .prefix('users')
 .namespace('App/Controllers/Http')
