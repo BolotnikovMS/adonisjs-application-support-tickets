@@ -106,9 +106,9 @@ export default class AuthController {
       avatar: validateData.avatar?.fileName,
       work_phone: validateData?.workPhone,
       mobile_phone: validateData?.mobilePhone,
-      id_department: validateData.department,
-      id_position: validateData.position,
-      id_role: validateData.role,
+      department_id: validateData.department,
+      position_id: validateData.position,
+      role_id: validateData.role,
       password: validateData.password,
       vip: validateData.vip
     })

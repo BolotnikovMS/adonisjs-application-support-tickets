@@ -1,10 +1,6 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import {
-  column,
-  beforeSave,
-  BaseModel,
-} from '@ioc:Adonis/Lucid/Orm'
+import { column, beforeSave, BaseModel } from '@ioc:Adonis/Lucid/Orm'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -32,13 +28,13 @@ export default class User extends BaseModel {
   public mobile_phone: string
 
   @column()
-  public id_department: number
+  public department_id: number
 
   @column()
-  public id_position: number
+  public position_id: number
 
   @column()
-  public id_role: number
+  public role_id: number
 
   @column({ serializeAs: null })
   public password: string
