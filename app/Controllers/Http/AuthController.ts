@@ -116,4 +116,18 @@ export default class AuthController {
     session.flash({ 'successmessage': `Пользователь: "${ validateData.surname } ${ validateData.name } ${ validateData.lastname }" был добавлен.` })
     return response.redirect('/')
   }
+
+  public async logout({ auth, response }: HttpContextContract) {
+    await auth.logout()
+
+    return response.redirect('/')
+  }
+
+  public async showLogin({ view }: HttpContextContract) {
+    return view.render('pages/auth/login', {
+      title: 'Авторизация'
+    })
+  }
+
+  public async login({ response }: HttpContextContract) {}
 }

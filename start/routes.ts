@@ -58,6 +58,9 @@ Route.group(() => {
 
   Route.get('/registeruser/new', 'AuthController.index').as('register.index')
   Route.post('/registeruser/new', 'AuthController.store').as('users.store')
+  Route.post('/logout', 'AuthController.logout').as('users.logout')
+  Route.get('/login', 'AuthController.showLogin').as('users.show.login')
+  Route.post('/login', 'AuthController.login').as('users.login')
 
   Route.get('/', 'UsersController.index').as('users.index')
 })
