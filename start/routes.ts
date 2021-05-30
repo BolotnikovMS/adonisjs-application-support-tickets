@@ -40,6 +40,7 @@ Route.group(() => {
 })
 .prefix('ticket')
 .namespace('App/Controllers/Http')
+.middleware('auth')
 
 Route.group(() => {
   Route.get('/positions', 'PositionsController.index').as('positions.index')
@@ -59,13 +60,19 @@ Route.group(() => {
   Route.get('/registeruser/new', 'AuthController.index').as('register.index')
   Route.post('/registeruser/new', 'AuthController.store').as('users.store')
   Route.post('/logout', 'AuthController.logout').as('users.logout')
-  Route.get('/login', 'AuthController.showLogin').as('users.show.login')
-  Route.post('/login', 'AuthController.login').as('users.login')
 
   Route.get('/', 'UsersController.index').as('users.index')
 })
 .prefix('users')
 .namespace('App/Controllers/Http')
+.middleware('auth')
+
+Route.group(() => {
+  Route.get('/login', 'AuthController.showLogin').as('users.show.login')
+  Route.post('/login', 'AuthController.login').as('users.login')
+})
+.namespace('App/Controllers/Http')
+.middleware('guest')
 
 Route.group(() => {
   // Type documents
@@ -84,6 +91,7 @@ Route.group(() => {
 })
 .prefix('documents')
 .namespace('App/Controllers/Http')
+.middleware('auth')
 
 // API Route
 // Route tickets type

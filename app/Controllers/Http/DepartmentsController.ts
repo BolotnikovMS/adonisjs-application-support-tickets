@@ -22,38 +22,28 @@ export default class DepartmentsController {
 
     await validator.validate({
       schema: schema.create({
-        name: schema.string({
-          escape: true,
-          trim: true
-        },
+        name: schema.string({trim: true},
         [
-          rules.minLength(3),
+          rules.minLength(2),
           rules.maxLength(80)
         ]),
-        number: schema.string({
-          escape: true,
-          trim: true
-        },
+        number: schema.string.optional({trim: true},
         [
           rules.maxLength(10)
         ]),
-        housing: schema.string.optional({
-          escape: true,
-          trim: true
-        },
+        housing: schema.string.optional({trim: true},
         [
-          rules.minLength(3),
+          rules.minLength(1),
           rules.maxLength(180)
         ])
       }),
       data: department,
       messages: {
         'name.required': 'Поле "Название" является обязательным.',
-        'name.minLength': 'Минимальная длинна поля 3 символа.',
+        'name.minLength': 'Минимальная длинна поля 2 символа.',
         'name.maxLength': 'Максимальная длинна поля 80 символов.',
-        'number.required': 'Поле "Кабинет" является обязательным.',
         'number.maxLength': 'Максимальная длинна поля 10 символов.',
-        'housing.minLength': 'Минимальная длинна поля 3 символа.',
+        'housing.minLength': 'Минимальная длинна поля 1 символа.',
         'housing.maxLength': 'Максимальная длинна поля 180 символов.'
       }
     })
@@ -79,25 +69,16 @@ export default class DepartmentsController {
   public async update ({ params, request, response, session }: HttpContextContract) {
     await request.validate({
       schema: schema.create({
-        name: schema.string({
-          escape: true,
-          trim: true
-        },
+        name: schema.string({trim: true},
         [
-          rules.minLength(3),
+          rules.minLength(2),
           rules.maxLength(80)
         ]),
-        number: schema.string({
-          escape: true,
-          trim: true
-        },
+        number: schema.string.optional({trim: true},
         [
           rules.maxLength(10)
         ]),
-        housing: schema.string.optional({
-          escape: true,
-          trim: true
-        },
+        housing: schema.string.optional({trim: true},
         [
           rules.minLength(1),
           rules.maxLength(180)
@@ -105,9 +86,8 @@ export default class DepartmentsController {
       }),
       messages: {
         'name.required': 'Поле "Название" является обязательным.',
-        'name.minLength': 'Минимальная длинна поля 3 символа.',
+        'name.minLength': 'Минимальная длинна поля 2 символа.',
         'name.maxLength': 'Максимальная длинна поля 80 символов.',
-        'number.required': 'Поле "Кабинет" является обязательным.',
         'number.maxLength': 'Максимальная длинна поля 10 символов.',
         'housing.minLength': 'Минимальная длинна поля 1 символа.',
         'housing.maxLength': 'Максимальная длинна поля 180 символов.'

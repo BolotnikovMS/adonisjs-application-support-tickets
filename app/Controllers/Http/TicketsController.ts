@@ -53,7 +53,7 @@ export default class TicketsController {
     })
   }
 
-  public async store ({ request, response, session }: HttpContextContract) {
+  public async store ({ auth, request, response, session }: HttpContextContract) {
     const validSchema = schema.create({
       topic: schema.string({
         escape: true,
@@ -110,7 +110,7 @@ export default class TicketsController {
       file_name_old: fileNameOld,
       file_extname: file.fileIn?.extname,
       id_ticket_type: file.typeReq,
-      id_user: 1,
+      id_user: auth.user?.id,
       status: 'Open'
     })
 

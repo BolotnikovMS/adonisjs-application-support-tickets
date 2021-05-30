@@ -114,7 +114,7 @@ export default class AuthController {
     })
 
     session.flash({ 'successmessage': `Пользователь: "${ validateData.surname } ${ validateData.name } ${ validateData.lastname }" был добавлен.` })
-    return response.redirect('/')
+    return response.redirect('/users/')
   }
 
   public async logout({ auth, response }: HttpContextContract) {
@@ -129,5 +129,30 @@ export default class AuthController {
     })
   }
 
-  public async login({ response }: HttpContextContract) {}
+  public async login({ request, response, auth, session }: HttpContextContract) {
+    const {email, password} = request.only(['email', 'password'])
+
+    await request.validate({
+      schema: schema.create({
+        email: schema.string({}, [
+          rules.email()
+        ]),
+        password: schema.string({})
+      }),
+      messages: {
+        'email.required': 'Поле "Email" является обязательным.',
+        'password.required': 'Поле "Пароль" является обязательным.'
+      }
+    })
+
+    try {
+      await auth.attempt(email, password)
+
+      return response.redirect('/')
+    } catch (error) {
+      session.flash('successmessage', 'Проверьте email или пароль.')
+
+      return response.redirect('back')
+    }
+  }
 }
