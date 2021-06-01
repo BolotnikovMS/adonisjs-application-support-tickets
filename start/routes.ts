@@ -57,9 +57,9 @@ Route.group(() => {
   Route.post('/departments/edit/:id', 'DepartmentsController.update').as('departments.update')
   Route.get('/departments/delete/:id', 'DepartmentsController.destroy').as('departments.destroy')
 
+  Route.post('/logout', 'AuthController.logout').as('users.logout')
   Route.get('/registeruser/new', 'AuthController.index').as('register.index')
   Route.post('/registeruser/new', 'AuthController.store').as('users.store')
-  Route.post('/logout', 'AuthController.logout').as('users.logout')
 
   Route.get('/', 'UsersController.index').as('users.index')
 })

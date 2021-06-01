@@ -1,12 +1,13 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
 import Application from '@ioc:Adonis/Core/Application'
+import Hash from '@ioc:Adonis/Core/Hash'
 
 import User from 'App/Models/User'
 import Department from 'App/Models/Department'
 import Position from 'App/Models/Position'
 import Role from 'App/Models/Role'
-
+import InfoUser from 'App/Models/InfoUser'
 export default class AuthController {
   public async index ({ view }: HttpContextContract) {
     const departments = await Department.all()
@@ -106,11 +107,20 @@ export default class AuthController {
       avatar: validateData.avatar?.fileName,
       work_phone: validateData?.workPhone,
       mobile_phone: validateData?.mobilePhone,
-      department_id: validateData.department,
-      position_id: validateData.position,
-      role_id: validateData.role,
+      departmentId: validateData.department,
+      positionId: validateData.position,
+      roleId: validateData.role,
       password: validateData.password,
       vip: validateData.vip
+    })
+
+    const userId = await User.all()
+
+    await InfoUser.create({
+      userId: userId[0].id,
+      roleId: validateData.role,
+      departmentId: validateData.department,
+      positionId: validateData.position
     })
 
     session.flash({ 'successmessage': `Пользователь: "${ validateData.surname } ${ validateData.name } ${ validateData.lastname }" был добавлен.` })
@@ -146,10 +156,23 @@ export default class AuthController {
     })
 
     try {
-      await auth.attempt(email, password)
+      // await auth.attempt(email, password)
 
+      const user = await User
+        .query()
+        .where('email', email)
+        .where('active', '=', 1)
+        .firstOrFail()
+
+        if (!(await Hash.verify(user.password, password))) {
+          session.flash('successmessage', 'Неверный пароль.')
+          return response.redirect('back')
+        }
+
+      await auth.use('web').login(user)
       return response.redirect('/')
     } catch (error) {
+      console.log(error);
       session.flash('successmessage', 'Проверьте email или пароль.')
 
       return response.redirect('back')
