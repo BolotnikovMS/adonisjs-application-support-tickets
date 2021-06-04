@@ -157,7 +157,6 @@ export default class AuthController {
 
     try {
       // await auth.attempt(email, password)
-
       const user = await User
         .query()
         .where('email', email)
@@ -172,8 +171,7 @@ export default class AuthController {
       await auth.use('web').login(user)
       return response.redirect('/')
     } catch (error) {
-      console.log(error);
-      session.flash('successmessage', 'Проверьте email или пароль.')
+      session.flash('successmessage', 'Учетная запись отключена или введены неверные данные.')
 
       return response.redirect('back')
     }

@@ -16,11 +16,11 @@ export default class UsersController {
     })
   }
 
-  public async create ({}: HttpContextContract) {
-  }
+  // public async create ({}: HttpContextContract) {
+  // }
 
-  public async store ({}: HttpContextContract) {
-  }
+  // public async store ({}: HttpContextContract) {
+  // }
 
   public async show ({}: HttpContextContract) {
   }
