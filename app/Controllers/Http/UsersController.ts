@@ -1,4 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
+import Application from '@ioc:Adonis/Core/Application'
 
 import User from 'App/Models/User'
 import Department from 'App/Models/Department'
@@ -45,7 +47,95 @@ export default class UsersController {
     })
   }
 
-  public async update ({}: HttpContextContract) {
+  public async update ({ params, request, response, session }: HttpContextContract) {
+    const validSchema = schema.create({
+      surname: schema.string({trim: true}, [
+        rules.minLength(3),
+        rules.maxLength(80)
+      ]),
+      name: schema.string({trim: true}, [
+        rules.minLength(3),
+        rules.maxLength(80)
+      ]),
+      lastname: schema.string({trim: true}, [
+        rules.minLength(3),
+        rules.maxLength(80)
+      ]),
+      avatar: schema.file.optional({
+        size: '15mb',
+        extnames: ['jpg', 'png', 'jpeg', 'bmp']
+      }),
+      workPhone: schema.string.optional({trim: true}, [
+        rules.minLength(3),
+        rules.maxLength(15)
+      ]),
+      mobilePhone: schema.string.optional({trim: true}, [
+        rules.minLength(3),
+        rules.maxLength(15)
+      ]),
+      department: schema.number(),
+      position: schema.number(),
+      role: schema.number(),
+      vip: schema.boolean.optional(),
+      active: schema.boolean.optional()
+    })
+
+    const messages = {
+      'surname.required': 'Поле "Фамилия" является обязательным.',
+      'surname.minLength': 'Минимальная длинна поля 3 символа.',
+      'surname.maxLength': 'Максимальная длинна поля 80 символов.',
+      'name.required': 'Поле "Имя" является обязательным.',
+      'name.minLength': 'Минимальная длинна поля 3 символа.',
+      'name.maxLength': 'Максимальная длинна поля 80 символов.',
+      'lastname.required': 'Поле "Отчество" является обязательным.',
+      'lastname.minLength': 'Минимальная длинна поля 3 символа.',
+      'lastname.maxLength': 'Максимальная длинна поля 80 символов.',
+      'avatar.size': 'Загружаемый файл больше 15 мб.',
+      'avatar.file.extname': 'Загружаемый файл должен иметь одно из следующих расширений: {{ options.extnames }}',
+      'workPhone.minLength': 'Минимальная длинна поля 3 символа.',
+      'workPhone.maxLength': 'Максимальная длинна поля 15 символов.',
+      'mobilePhone.minLength': 'Минимальная длинна поля 3 символа.',
+      'mobilePhone.maxLength': 'Максимальная длинна поля 15 символов.',
+      'department.required': 'Поле "Отдел" является обязательным.',
+      'position.required': 'Поле "Должность" является обязательным.',
+      'role.required': 'Поле "Роль" является обязательным.',
+    }
+
+    const validateData = await request.validate({
+      schema: validSchema,
+      messages
+    })
+
+    if (validateData.avatar) {
+      await validateData.avatar.move(Application.publicPath('uploads/avatar'), {
+        name: `${new Date().getTime()}.${validateData.avatar.extname}`
+      })
+    }
+
+    const user = await User.findOrFail(params.id)
+    const userUpdate = request.only(['surname', 'name', 'lastname', 'email', 'workPhone', 'mobilePhone', 'department', 'position', 'role', 'vip', 'active'])
+
+    userUpdate.vip ? userUpdate.vip = 1 : userUpdate.vip = 0
+    userUpdate.active ? userUpdate.active = 0 : userUpdate.active = 1
+
+    if (user) {
+      user.surname = userUpdate.surname.trim()
+      user.name = userUpdate.name.trim()
+      user.lastname = userUpdate.lastname.trim()
+      user.email = userUpdate.email.trim()
+      user.work_phone = userUpdate.workPhone.trim()
+      user.mobile_phone = userUpdate.mobilePhone.trim()
+      user.positionId = userUpdate.position
+      user.departmentId = userUpdate.department
+      user.roleId = userUpdate.role
+      user.vip = userUpdate.vip
+      user.active = userUpdate.active
+
+      await user.save()
+    }
+
+    session.flash('successmessage', `Данные пользователя "${user.surname} ${user.name} ${user.lastname}" успешно обновлены.`)
+    return response.redirect('/users/');
   }
 
   public async destroy ({ params, response, session }: HttpContextContract) {
