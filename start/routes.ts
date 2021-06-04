@@ -62,6 +62,9 @@ Route.group(() => {
   Route.post('/registeruser/new', 'AuthController.store').as('users.store')
 
   Route.get('/', 'UsersController.index').as('users.index')
+  Route.get('/edit/:id', 'UsersController.edit').as('user.edit')
+  Route.post('/edit/:id', 'UsersController.update').as('user.update')
+  Route.get('/delete/:id', 'UsersController.destroy').as('user.destroy')
 })
 .prefix('users')
 .namespace('App/Controllers/Http')
