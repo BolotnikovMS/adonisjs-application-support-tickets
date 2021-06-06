@@ -145,6 +145,21 @@ export default class UsersController {
     return response.redirect('/users/');
   }
 
+  public async inactiveUser ({ params, request, response, session }: HttpContextContract) {
+    const user = await User.findOrFail(params.id)
+    const activeUpdate = request.only(['active'])
+
+    activeUpdate.active ? activeUpdate.active = 0 : activeUpdate.active = 1
+
+    if (user) {
+      user.active = activeUpdate.active
+
+      await user.save()
+    }
+
+    return response.redirect('/users/');
+  }
+
   public async destroy ({ params, response, session }: HttpContextContract) {
     const user = await User.findOrFail(params.id)
 

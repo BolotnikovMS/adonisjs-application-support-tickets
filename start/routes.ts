@@ -64,6 +64,7 @@ Route.group(() => {
   Route.get('/', 'UsersController.index').as('users.index')
   Route.get('/edit/:id', 'UsersController.edit').as('user.edit')
   Route.post('/edit/:id', 'UsersController.update').as('user.update')
+  Route.post('/edit/active/:id', 'UsersController.inactiveUser').as('user.active.update')
   Route.get('/delete/:id', 'UsersController.destroy').as('user.destroy')
 })
 .prefix('users')
