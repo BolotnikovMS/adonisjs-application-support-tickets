@@ -48,6 +48,7 @@ export default class UsersController {
   }
 
   public async update ({ params, request, response, session }: HttpContextContract) {
+    const user = await User.findOrFail(params.id)
     const validSchema = schema.create({
       surname: schema.string({trim: true}, [
         rules.minLength(3),
@@ -110,10 +111,15 @@ export default class UsersController {
       await validateData.avatar.move(Application.publicPath('uploads/avatar'), {
         name: `${new Date().getTime()}.${validateData.avatar.extname}`
       })
+
+      fs.unlink(`public/uploads/avatar/${user.avatar}`, (err) => {
+        if (err) {
+          console.log(err)
+        }
+      })
     }
 
-    const user = await User.findOrFail(params.id)
-    const userUpdate = request.only(['surname', 'name', 'lastname', 'email', 'workPhone', 'mobilePhone', 'department', 'position', 'role', 'vip', 'active'])
+    const userUpdate = request.only(['surname', 'name', 'lastname', 'email', 'avatar', 'workPhone', 'mobilePhone', 'department', 'position', 'role', 'vip', 'active'])
 
     userUpdate.vip ? userUpdate.vip = 1 : userUpdate.vip = 0
     userUpdate.active ? userUpdate.active = 0 : userUpdate.active = 1
@@ -123,6 +129,7 @@ export default class UsersController {
       user.name = userUpdate.name.trim()
       user.lastname = userUpdate.lastname.trim()
       user.email = userUpdate.email.trim()
+      user.avatar = validateData.avatar?.fileName,
       user.work_phone = userUpdate.workPhone.trim()
       user.mobile_phone = userUpdate.mobilePhone.trim()
       user.positionId = userUpdate.position
