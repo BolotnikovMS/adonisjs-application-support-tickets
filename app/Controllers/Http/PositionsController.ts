@@ -6,7 +6,7 @@ import Database from '@ioc:Adonis/Lucid/Database'
 import Position from 'App/Models/Position';
 
 export default class PositionsController {
-  public async index ({ request, view }: HttpContextContract) {
+  public async index ({ view, request }: HttpContextContract) {
     const page = request.input('page', 1)
     const limit = 10
     const positions = await Database.from('positions').paginate(page, limit)

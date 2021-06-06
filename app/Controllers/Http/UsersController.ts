@@ -1,6 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
 import Application from '@ioc:Adonis/Core/Application'
+import Database from '@ioc:Adonis/Lucid/Database'
 
 import User from 'App/Models/User'
 import Department from 'App/Models/Department'
@@ -10,12 +11,17 @@ import Role from 'App/Models/Role'
 import fs from 'fs'
 
 export default class UsersController {
-  public async index ({ view }: HttpContextContract) {
+  public async index ({ view, request }: HttpContextContract) {
+    const page = request.input('page', 1)
+    const limit = 15
     const users = await User
       .query()
       .preload('position')
       .preload('role')
       .preload('department')
+      .paginate(page, limit)
+
+    users.baseUrl('/users/')
 
     return view.render('pages/admin_users/users', {
       title: 'Все пользователи',
@@ -145,7 +151,7 @@ export default class UsersController {
     return response.redirect('/users/');
   }
 
-  public async inactiveUser ({ params, request, response, session }: HttpContextContract) {
+  public async inactiveUser ({ params, request, response }: HttpContextContract) {
     const user = await User.findOrFail(params.id)
     const activeUpdate = request.only(['active'])
 

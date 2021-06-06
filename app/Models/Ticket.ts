@@ -1,5 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
+
+import TypeTicket from './TypeTicket'
+import User from './User'
 
 export default class Ticket extends BaseModel {
   @column({ isPrimary: true })
@@ -48,4 +51,10 @@ export default class Ticket extends BaseModel {
     }
   })
   public updatedAt: DateTime
+
+  @hasMany(() => TypeTicket, {
+    localKey: 'id_ticket_type',
+    foreignKey: 'id'
+  })
+  public type: HasMany<typeof TypeTicket>
 }

@@ -12,30 +12,35 @@ export default class TicketsController {
     const arrOpenTickets = []
     const arrClosedTickets = []
 
-    tickets.forEach((itemTicket) => {
-      let ticket = {
-        id: itemTicket.id,
-        topic: itemTicket.topic,
-        description: itemTicket.description,
-        status: itemTicket.status,
-        type: '',
-        id_user: itemTicket.id_user,
-        created: itemTicket.createdAt,
-        updated: itemTicket.updatedAt
-      }
+    const test = await Ticket
+        .query()
+        .preload('type')
 
-      types.forEach((itemType) => {
-        if (itemTicket.id_ticket_type == itemType.id) {
-          ticket.type = itemType.name
-        }
-      })
+    return test
+    // tickets.forEach((itemTicket) => {
+    //   let ticket = {
+    //     id: itemTicket.id,
+    //     topic: itemTicket.topic,
+    //     description: itemTicket.description,
+    //     status: itemTicket.status,
+    //     type: '',
+    //     id_user: itemTicket.id_user,
+    //     created: itemTicket.createdAt,
+    //     updated: itemTicket.updatedAt
+    //   }
 
-      if (ticket.status.toLowerCase() === 'open') {
-        arrOpenTickets.push(ticket)
-      } else {
-        arrClosedTickets.push(ticket)
-      }
-    })
+    //   types.forEach((itemType) => {
+    //     if (itemTicket.id_ticket_type == itemType.id) {
+    //       ticket.type = itemType.name
+    //     }
+    //   })
+
+    //   if (ticket.status.toLowerCase() === 'open') {
+    //     arrOpenTickets.push(ticket)
+    //   } else {
+    //     arrClosedTickets.push(ticket)
+    //   }
+    // })
 
     return view.render('pages/ticket/ticket', {
       title: 'Заявки',
