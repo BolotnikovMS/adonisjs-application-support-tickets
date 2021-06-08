@@ -57,4 +57,10 @@ export default class Ticket extends BaseModel {
     foreignKey: 'id'
   })
   public type: HasMany<typeof TypeTicket>
+
+  @hasMany(() => User, {
+    localKey: 'id_user',
+    foreignKey: 'id'
+  })
+  public user: HasMany<typeof User>
 }

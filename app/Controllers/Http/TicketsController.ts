@@ -7,41 +7,23 @@ import Ticket from 'App/Models/Ticket'
 
 export default class TicketsController {
   public async index ({ view }: HttpContextContract) {
-    const tickets = await Ticket.all()
-    const types = await TypeTicket.all()
     const arrOpenTickets = []
     const arrClosedTickets = []
 
     const test = await Ticket
         .query()
         .preload('type')
+        .preload('user')
+
+    test.forEach((itemTicket) => {
+      if (itemTicket.status.toLowerCase() === 'open') {
+        arrOpenTickets.push(itemTicket)
+      } else {
+        arrClosedTickets.push(itemTicket)
+      }
+    })
 
     return test
-    // tickets.forEach((itemTicket) => {
-    //   let ticket = {
-    //     id: itemTicket.id,
-    //     topic: itemTicket.topic,
-    //     description: itemTicket.description,
-    //     status: itemTicket.status,
-    //     type: '',
-    //     id_user: itemTicket.id_user,
-    //     created: itemTicket.createdAt,
-    //     updated: itemTicket.updatedAt
-    //   }
-
-    //   types.forEach((itemType) => {
-    //     if (itemTicket.id_ticket_type == itemType.id) {
-    //       ticket.type = itemType.name
-    //     }
-    //   })
-
-    //   if (ticket.status.toLowerCase() === 'open') {
-    //     arrOpenTickets.push(ticket)
-    //   } else {
-    //     arrClosedTickets.push(ticket)
-    //   }
-    // })
-
     return view.render('pages/ticket/ticket', {
       title: 'Заявки',
       openTickets: arrOpenTickets,
