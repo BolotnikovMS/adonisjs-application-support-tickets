@@ -180,4 +180,10 @@ export default class UsersController {
     session.flash({ 'successmessage': `Пользователь: "${user?.surname} ${user?.name} ${user?.lastname}" был удален.` });
     response.redirect('/users/')
   }
+
+  public async infoUser ({ params }: HttpContextContract) {
+    const user = await User.findOrFail(params.id)
+
+    return user
+  }
 }

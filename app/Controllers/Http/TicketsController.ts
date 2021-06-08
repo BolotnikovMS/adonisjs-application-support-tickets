@@ -9,13 +9,12 @@ export default class TicketsController {
   public async index ({ view }: HttpContextContract) {
     const arrOpenTickets = []
     const arrClosedTickets = []
-
-    const test = await Ticket
+    const tickets = await Ticket
         .query()
         .preload('type')
         .preload('user')
 
-    test.forEach((itemTicket) => {
+      tickets.forEach((itemTicket) => {
       if (itemTicket.status.toLowerCase() === 'open') {
         arrOpenTickets.push(itemTicket)
       } else {
@@ -23,7 +22,6 @@ export default class TicketsController {
       }
     })
 
-    return test
     return view.render('pages/ticket/ticket', {
       title: 'Заявки',
       openTickets: arrOpenTickets,
