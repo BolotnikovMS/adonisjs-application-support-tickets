@@ -66,7 +66,7 @@ Route.group(() => {
   Route.post('/edit/:id', 'UsersController.update').as('user.update')
   Route.post('/edit/active/:id', 'UsersController.inactiveUser').as('user.active.update')
   Route.get('/delete/:id', 'UsersController.destroy').as('user.destroy')
-  Route.get('/info/:id', 'UserController.infoUser').as('info.user')
+  Route.get('/profile/:id', 'UsersController.profile').as('user.profile.index')
 })
 .prefix('users')
 .namespace('App/Controllers/Http')
