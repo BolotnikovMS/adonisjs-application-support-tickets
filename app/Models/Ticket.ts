@@ -35,6 +35,9 @@ export default class Ticket extends BaseModel {
   @column({})
   public status: string
 
+  @column({})
+  public working_hours: number
+
   @column.dateTime({
     autoCreate: true,
     serialize: (value?: DataTime) => {

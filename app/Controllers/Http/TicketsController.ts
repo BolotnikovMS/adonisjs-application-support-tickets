@@ -40,18 +40,12 @@ export default class TicketsController {
 
   public async store ({ auth, request, response, session }: HttpContextContract) {
     const validSchema = schema.create({
-      topic: schema.string({
-        escape: true,
-        trim: true
-      },
+      topic: schema.string({trim: true},
       [
         rules.minLength(3),
         rules.maxLength(80)
       ]),
-      description: schema.string({
-        escape: true,
-        trim: true
-      },
+      description: schema.string({trim: true},
       [
         rules.minLength(3)
       ]),
@@ -112,8 +106,30 @@ export default class TicketsController {
     })
   }
 
-  public async close ({ params, session, request, response }: HttpContextContract) {
+  public async close ({ params, session, request, response, auth }: HttpContextContract) {
+    const ticket = await Ticket.findOrFail(params.id)
+    const validSchema = schema.create({
+      time: schema.string({trim: true})
+    })
+    const messages = {
+      'time.required': 'Поле "Время " является обязательным.',
+    }
 
+    const validateData = await request.validate({
+      schema: validSchema,
+      messages
+    })
+
+    if (ticket) {
+      ticket.status = request.input('status')
+      ticket.working_hours = validateData.time
+      ticket.id_user_closed = auth.user?.id
+
+      await ticket.save()
+    }
+
+    session.flash({ 'successmessage': `Заявка с темой: "${ ticket.topic }" была закрыта.` })
+    return response.redirect('/ticket')
   }
 
   // Type tickets route
