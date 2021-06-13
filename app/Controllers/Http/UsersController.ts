@@ -180,17 +180,4 @@ export default class UsersController {
     session.flash({ 'successmessage': `Пользователь: "${user?.surname} ${user?.name} ${user?.lastname}" был удален.` });
     response.redirect('/users/')
   }
-
-  public async profile ({ params, response, view }: HttpContextContract) {
-    const user = await User.query()
-      .where('id', '=', params.id)
-      .preload('department')
-      .preload('position')
-      .preload('role')
-
-    return view.render('pages/users/profile', {
-      title: 'Профиль',
-      user
-    })
-  }
 }
