@@ -37,6 +37,7 @@ Route.group(() => {
   Route.get('/new', 'TicketsController.create').as('ticket.create')
   Route.post('/new', 'TicketsController.store').as('ticket.store')
   Route.get('/show/:id', 'TicketsController.show').as('ticket.show')
+  Route.post('/show/:id', 'TicketsController.close').as('ticket.close')
 })
 .prefix('ticket')
 .namespace('App/Controllers/Http')

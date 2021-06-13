@@ -164,14 +164,14 @@ export default class AuthController {
         .firstOrFail()
 
         if (!(await Hash.verify(user.password, password))) {
-          session.flash('successmessage', 'Неверный пароль.')
+          session.flash('dangermessage', 'Неверный пароль.')
           return response.redirect('back')
         }
 
       await auth.use('web').login(user)
       return response.redirect('/')
     } catch (error) {
-      session.flash('successmessage', 'Учетная запись отключена или введены неверные данные.')
+      session.flash('dangermessage', 'Учетная запись отключена или введены неверные данные.')
 
       return response.redirect('back')
     }

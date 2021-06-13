@@ -107,18 +107,13 @@ export default class TicketsController {
     const ticket = await Ticket.findOrFail(params.id)
 
     return view.render('pages/ticket/detail', {
-      title: 'Подробный просмотр',
+      title: `Подробный просмотр обращения: №${ticket.id}, тема: "${ticket.topic}"`,
       ticket
     })
   }
 
-  public async edit ({}: HttpContextContract) {
-  }
+  public async close ({ params, session, request, response }: HttpContextContract) {
 
-  public async update ({}: HttpContextContract) {
-  }
-
-  public async destroy ({}: HttpContextContract) {
   }
 
   // Type tickets route
@@ -164,22 +159,6 @@ export default class TicketsController {
     session.flash('successmessage', `Тип "${type.name}" успешно добавлен.`)
     response.redirect('/ticket/type')
   }
-
-  // public async showType ({ params, response }: HttpContextContract) {
-  //   try {
-  //     const type = await TypeTicket.find(params.id)
-
-  //     return type ? type : response.send('No content')
-  //     // if (type) {
-  //     //   return type
-  //     // } else {
-  //     //   return response.send('No content')
-  //     // }
-  //   } catch (error) {
-  //     console.log('----ERROR----')
-  //     console.log(error)
-  //   }
-  // }
 
   public async editType ({ view, params }: HttpContextContract) {
     const type = await TypeTicket.findOrFail(params.id)
