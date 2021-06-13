@@ -115,24 +115,24 @@ export default class UsersController {
       })
     }
 
-    const userUpdate = request.only(['surname', 'name', 'lastname', 'email', 'avatar', 'workPhone', 'mobilePhone', 'department', 'position', 'role', 'vip', 'active'])
+    const userUpdate = request.only(['email'])
 
-    userUpdate.vip ? userUpdate.vip = 1 : userUpdate.vip = 0
-    userUpdate.active ? userUpdate.active = 0 : userUpdate.active = 1
+    validateData.vip ? validateData.vip = true : validateData.vip = false
+    validateData.active ? validateData.active = false : validateData.active = true
 
     if (user) {
-      user.surname = userUpdate.surname.trim()
-      user.name = userUpdate.name.trim()
-      user.lastname = userUpdate.lastname.trim()
+      user.surname = validateData.surname.trim()
+      user.name = validateData.name.trim()
+      user.lastname = validateData.lastname.trim()
       user.email = userUpdate.email.trim()
       user.avatar = validateData.avatar?.fileName,
-      user.work_phone = userUpdate.workPhone.trim()
-      user.mobile_phone = userUpdate.mobilePhone.trim()
-      user.positionId = userUpdate.position
-      user.departmentId = userUpdate.department
-      user.roleId = userUpdate.role
-      user.vip = userUpdate.vip
-      user.active = userUpdate.active
+      user.work_phone = validateData.workPhone?.trim()
+      user.mobile_phone = validateData.mobilePhone?.trim()
+      user.positionId = validateData.position
+      user.departmentId = validateData.department
+      user.roleId = validateData.role
+      user.vip = validateData.vip
+      user.active = validateData.active
 
       await user.save()
     }
