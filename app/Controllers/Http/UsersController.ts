@@ -1,7 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
 import Application from '@ioc:Adonis/Core/Application'
-import Database from '@ioc:Adonis/Lucid/Database'
 
 import User from 'App/Models/User'
 import Department from 'App/Models/Department'
@@ -28,15 +27,6 @@ export default class UsersController {
       users
     })
   }
-
-  // public async create ({}: HttpContextContract) {
-  // }
-
-  // public async store ({}: HttpContextContract) {
-  // }
-
-  // public async show ({}: HttpContextContract) {
-  // }
 
   public async edit ({ view, params }: HttpContextContract) {
     const user = await User.findOrFail(params.id)
