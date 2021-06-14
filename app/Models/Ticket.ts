@@ -66,4 +66,10 @@ export default class Ticket extends BaseModel {
     foreignKey: 'id'
   })
   public user: HasMany<typeof User>
+
+  @hasMany(() => User, {
+    localKey: 'id_user_closed',
+    foreignKey: 'id'
+  })
+  public userClose: HasMany<typeof User>
 }
