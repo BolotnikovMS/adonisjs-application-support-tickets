@@ -12,6 +12,9 @@ export default class Document extends BaseModel {
   public file_name: string
 
   @column({})
+  public file_extname: string
+
+  @column({})
   public id_type: number
 
   @column.dateTime({
