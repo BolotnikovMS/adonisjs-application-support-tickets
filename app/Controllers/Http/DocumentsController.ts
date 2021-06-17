@@ -62,6 +62,7 @@ export default class DocumentsController {
     await Document.create({
       name: file.name,
       file_name: file.fileIn.fileName,
+      file_extname: file.fileIn.extname,
       id_type: file.typeDoc
     })
 
