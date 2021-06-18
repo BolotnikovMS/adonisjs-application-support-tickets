@@ -20,9 +20,9 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.on('/').render('index', {
-  title: 'Главная страница'
-}).as('home');
+Route.group(() => {
+  Route.get('/', 'NewsController.index').as('news.index')
+})
 
 Route.group(() => {
   // Type tickets
