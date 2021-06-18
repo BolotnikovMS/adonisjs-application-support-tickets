@@ -1,7 +1,12 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
+import News from 'App/Models/News'
+
 export default class NewsController {
   public async index ({ view }: HttpContextContract) {
+    const news = await News.query()
+      .preload('users')
+
     return view.render('pages/news/news', {
       title: 'Главная страница'
     })
