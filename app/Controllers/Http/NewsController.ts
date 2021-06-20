@@ -8,11 +8,15 @@ export default class NewsController {
       .preload('users')
 
     return view.render('pages/news/news', {
-      title: 'Главная страница'
+      title: 'Главная страница',
+      news
     })
   }
 
-  public async create ({}: HttpContextContract) {
+  public async create ({ view }: HttpContextContract) {
+    return view.render('pages/news/create', {
+      title: 'Добавить новость'
+    })
   }
 
   public async store ({}: HttpContextContract) {

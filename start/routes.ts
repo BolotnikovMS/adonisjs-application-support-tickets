@@ -22,6 +22,7 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
   Route.get('/', 'NewsController.index').as('news.index')
+  Route.get('/new', 'NewsController.create').as('news.create')
 })
 
 Route.group(() => {
