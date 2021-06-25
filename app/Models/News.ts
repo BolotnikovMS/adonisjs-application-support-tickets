@@ -8,6 +8,9 @@ export default class News extends BaseModel {
   public id: number
 
   @column({})
+  public topic: string
+
+  @column({})
   public article: string
 
   @column({})
