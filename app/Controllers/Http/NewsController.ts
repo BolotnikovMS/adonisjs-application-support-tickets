@@ -22,6 +22,13 @@ export default class NewsController {
 
   public async store ({ request, response, session, auth }: HttpContextContract) {
     const validSchema = schema.create({
+      topic: schema.string({
+        trim: true
+      },
+      [
+        rules.minLength(3),
+        rules.maxLength(100)
+      ]),
       textNews: schema.string({
         trim: true
       },
@@ -31,6 +38,9 @@ export default class NewsController {
     })
 
     const messages = {
+      'topic.required': 'Поле "Тема" является обязательным.',
+      'topic.minLength': 'Минимальная длинна поля 3 символа.',
+      'topic.maxLength': 'Максимальная длинна поля 100 символов.',
       'textNews.required': 'Поле ввода статьи не должно быть пустым.',
       'textNews.minLength': 'Минимальная длинна поля 3 символа.',
     }
@@ -41,12 +51,13 @@ export default class NewsController {
     })
 
     await News.create({
+      topic: dataValid.topic,
       article: dataValid.textNews,
       user_id: auth.user?.id
     })
 
     session.flash({ 'successmessage': `Новость добавлена.` })
-    return response.redirect('back')
+    return response.redirect('/')
   }
 
   public async show ({}: HttpContextContract) {
