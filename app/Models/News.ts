@@ -34,7 +34,7 @@ export default class News extends BaseModel {
   public updatedAt: DateTime
 
   @hasMany(() => User, {
-    // localKey: 'user_id',
+    localKey: 'user_id',
     foreignKey: 'id'
   })
   public users: HasMany<typeof User>

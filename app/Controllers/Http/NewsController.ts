@@ -4,9 +4,16 @@ import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
 import News from 'App/Models/News'
 
 export default class NewsController {
-  public async index ({ view }: HttpContextContract) {
-    const news = await News.query()
+  public async index ({ view, request }: HttpContextContract) {
+    const page = request.input('page', 1)
+    const limit = 4
+
+    const news = await News
+      .query()
       .preload('users')
+      .paginate(page, limit)
+
+    news.baseUrl('/')
 
     return view.render('pages/news/news', {
       title: 'Главная страница',
@@ -60,7 +67,13 @@ export default class NewsController {
     return response.redirect('/')
   }
 
-  public async show ({}: HttpContextContract) {
+  public async show ({ view, params }: HttpContextContract) {
+    const news = await News.findOrFail(params.id)
+
+    return view.render('pages/news/detail', {
+      title: `${news.topic}`,
+      news
+    })
   }
 
   public async edit ({}: HttpContextContract) {
