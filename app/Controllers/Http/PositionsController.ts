@@ -58,9 +58,6 @@ export default class PositionsController {
     response.redirect('/users/positions')
   }
 
-  // public async show ({}: HttpContextContract) {
-  // }
-
   public async edit ({ view, params }: HttpContextContract) {
     const position = await Position.findOrFail(params.id)
 

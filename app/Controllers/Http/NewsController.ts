@@ -30,9 +30,7 @@ export default class NewsController {
 
   public async store ({ request, response, session, auth }: HttpContextContract) {
     const validSchema = schema.create({
-      topic: schema.string({
-        trim: true
-      },
+      topic: schema.string({trim: true},
       [
         rules.minLength(3),
         rules.maxLength(100)
@@ -64,7 +62,7 @@ export default class NewsController {
       user_id: auth.user?.id
     })
 
-    session.flash({ 'successmessage': `Новость добавлена.` })
+    session.flash({ 'successmessage': 'Новость добавлена.' })
     return response.redirect('/')
   }
 
@@ -77,12 +75,61 @@ export default class NewsController {
     })
   }
 
-  public async edit ({}: HttpContextContract) {
+  public async edit ({ view, params }: HttpContextContract) {
+    const news = await News.findOrFail(params.id)
+
+    return view.render('pages/news/edit', {
+      title: 'Редактирование',
+      news
+    })
   }
 
-  public async update ({}: HttpContextContract) {
+  public async update ({ request, response, params, session }: HttpContextContract) {
+    const validSchema = schema.create({
+      topic: schema.string({trim: true},
+      [
+        rules.minLength(3),
+        rules.maxLength(100)
+      ]),
+      textNews: schema.string({
+        trim: true
+      },
+      [
+        rules.minLength(3)
+      ])
+    })
+
+    const messages = {
+      'topic.required': 'Поле "Тема" является обязательным.',
+      'topic.minLength': 'Минимальная длинна поля 3 символа.',
+      'topic.maxLength': 'Максимальная длинна поля 100 символов.',
+      'textNews.required': 'Поле ввода статьи не должно быть пустым.',
+      'textNews.minLength': 'Минимальная длинна поля 3 символа.',
+    }
+
+    const dataValid = await request.validate({
+      schema: validSchema,
+      messages
+    })
+
+    const news = await News.findOrFail(params.id)
+
+    if (news) {
+      news.topic = dataValid.topic,
+      news.article = dataValid.textNews
+
+      await news.save()
+    }
+
+    session.flash('successmessage', 'Новость успешно обновлена.')
+    return response.redirect('/');
   }
 
-  public async destroy ({}: HttpContextContract) {
+  public async destroy ({ params, response, session }: HttpContextContract) {
+    const news = await News.findOrFail(params.id)
+
+    await news.delete()
+    session.flash({ 'successmessage': `Новость "${news.topic}" была удалена.` });
+    response.redirect('back')
   }
 }

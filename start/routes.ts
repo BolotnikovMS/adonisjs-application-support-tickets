@@ -25,6 +25,9 @@ Route.group(() => {
   Route.get('/new', 'NewsController.create').as('news.create')
   Route.post('/new', 'NewsController.store').as('news.store')
   Route.get('/show/:id', 'NewsController.show').as('news.show')
+  Route.get('/edit/:id', 'NewsController.edit').as('news.edit')
+  Route.post('/edit/:id', 'NewsController.update').as('news.update')
+  Route.get('/delete/:id', 'NewsController.destroy').as('news.destroy')
 })
 
 Route.group(() => {
