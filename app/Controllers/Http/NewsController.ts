@@ -10,6 +10,7 @@ export default class NewsController {
 
     const news = await News
       .query()
+      .orderBy('created_at', 'desc')
       .preload('users')
       .paginate(page, limit)
 
