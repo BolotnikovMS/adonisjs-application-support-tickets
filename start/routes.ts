@@ -22,13 +22,18 @@ import Route from '@ioc:Adonis/Core/Route'
 
 Route.group(() => {
   Route.get('/', 'NewsController.index').as('news.index')
-  Route.get('/new', 'NewsController.create').as('news.create')
-  Route.post('/new', 'NewsController.store').as('news.store')
   Route.get('/show/:id', 'NewsController.show').as('news.show')
-  Route.get('/edit/:id', 'NewsController.edit').as('news.edit')
-  Route.post('/edit/:id', 'NewsController.update').as('news.update')
-  Route.get('/delete/:id', 'NewsController.destroy').as('news.destroy')
+
+  Route.group(() => {
+    Route.get('/new', 'NewsController.create').as('news.create')
+    Route.post('/new', 'NewsController.store').as('news.store')
+    Route.get('/edit/:id', 'NewsController.edit').as('news.edit')
+    Route.post('/edit/:id', 'NewsController.update').as('news.update')
+    Route.get('/delete/:id', 'NewsController.destroy').as('news.destroy')
+  })
+  .middleware('auth')
 })
+.namespace('App/Controllers/Http')
 
 Route.group(() => {
   // Type tickets
