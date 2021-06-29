@@ -17,7 +17,7 @@ export default class NewsController {
     news.baseUrl('/')
 
     return view.render('pages/news/news', {
-      title: 'Главная страница',
+      title: 'Новостная лента',
       news
     })
   }
@@ -56,10 +56,9 @@ export default class NewsController {
       messages
     })
 
-    await News.create({
+    await auth.user?.related('news').create({
       topic: dataValid.topic,
       article: dataValid.textNews,
-      user_id: auth.user?.id
     })
 
     session.flash({ 'successmessage': 'Новость добавлена.' })

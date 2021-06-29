@@ -1,10 +1,11 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm'
+import { column, beforeSave, BaseModel, manyToMany, ManyToMany, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
 
 import Role from './Role'
 import Position from './Position'
 import Department from './Department';
+import News from './News'
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
@@ -89,4 +90,9 @@ export default class User extends BaseModel {
     pivotTable: 'info_users'
   })
   public position: ManyToMany<typeof Position>
+
+  @hasMany(() => News, {
+    foreignKey: 'user_id'
+  })
+  public news: HasMany<typeof News>
 }
