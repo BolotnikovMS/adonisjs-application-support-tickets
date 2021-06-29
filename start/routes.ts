@@ -45,10 +45,13 @@ Route.group(() => {
   Route.get('/type/delete/:id', 'TicketsController.destroyType').as('type.ticket.destroy')
 
   Route.get('/', 'TicketsController.index').as('ticket.index')
-  Route.get('/new', 'TicketsController.create').as('ticket.create')
-  Route.post('/new', 'TicketsController.store').as('ticket.store')
   Route.get('/show/:id', 'TicketsController.show').as('ticket.show')
   Route.post('/show/:id', 'TicketsController.close').as('ticket.close')
+
+  // User tickets
+  Route.get('/user/', 'TicketsController.indexUser').as('ticket.index.user')
+  Route.get('/new', 'TicketsController.create').as('ticket.create')
+  Route.post('/new', 'TicketsController.store').as('ticket.store')
 })
 .prefix('ticket')
 .namespace('App/Controllers/Http')

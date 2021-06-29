@@ -6,6 +6,7 @@ import Role from './Role'
 import Position from './Position'
 import Department from './Department';
 import News from './News'
+import Ticket from './Ticket';
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
@@ -95,4 +96,9 @@ export default class User extends BaseModel {
     foreignKey: 'user_id'
   })
   public news: HasMany<typeof News>
+
+  @hasMany(() => Ticket, {
+    foreignKey: 'id_user'
+  })
+  public ticketUser: HasMany<typeof Ticket>
 }

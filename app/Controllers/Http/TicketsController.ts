@@ -32,7 +32,7 @@ export default class TicketsController {
   public async create ({ view }: HttpContextContract) {
     const types = await TypeTicket.all()
 
-    return view.render('pages/ticket/create', {
+    return view.render('pages/users/ticket/create', {
       title: 'Новая заявка',
       types
     })
@@ -130,6 +130,28 @@ export default class TicketsController {
 
     session.flash({ 'successmessage': `Заявка с темой: "${ ticket.topic }" была закрыта.` })
     return response.redirect('/ticket')
+  }
+
+  public async indexUser ({ view, auth }: HttpContextContract) {
+    const arrOpenTickets = []
+    const arrClosedTickets = []
+    const user = auth.user
+    await user?.preload('ticketUser')
+    const tickets = user?.ticketUser
+
+    tickets?.forEach((itemTicket) => {
+      if (itemTicket.status.toLowerCase() === 'open') {
+        arrOpenTickets.push(itemTicket)
+      } else {
+        arrClosedTickets.push(itemTicket)
+      }
+    })
+
+    return view.render('pages/users/ticket/user_ticket', {
+      title: 'Заявки',
+      openTickets: arrOpenTickets,
+      closedTickets: arrClosedTickets
+    })
   }
 
   // Type tickets route
