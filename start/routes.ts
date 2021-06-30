@@ -58,30 +58,32 @@ Route.group(() => {
 .middleware('auth')
 
 Route.group(() => {
-  Route.get('/positions', 'PositionsController.index').as('positions.index')
-  Route.get('/positions/new', 'PositionsController.create').as('positions.create')
-  Route.post('/positions/new', 'PositionsController.store').as('positions.store')
-  Route.get('/positions/edit/:id', 'PositionsController.edit').as('positions.edit')
-  Route.post('/positions/edit/:id', 'PositionsController.update').as('positions.update')
-  Route.get('/positions/:id', 'PositionsController.destroy').as('positions.destroy')
+  Route.group(() => {
+    Route.get('/positions', 'PositionsController.index').as('positions.index')
+    Route.get('/positions/new', 'PositionsController.create').as('positions.create')
+    Route.post('/positions/new', 'PositionsController.store').as('positions.store')
+    Route.get('/positions/edit/:id', 'PositionsController.edit').as('positions.edit')
+    Route.post('/positions/edit/:id', 'PositionsController.update').as('positions.update')
+    Route.get('/positions/:id', 'PositionsController.destroy').as('positions.destroy')
 
-  Route.get('/departments', 'DepartmentsController.index').as('departments.index')
-  Route.get('/departments/new', 'DepartmentsController.create').as('departments.create')
-  Route.post('/departments/new', 'DepartmentsController.store').as('departments.store')
-  Route.get('/departments/edit/:id', 'DepartmentsController.edit').as('departments.edit')
-  Route.post('/departments/edit/:id', 'DepartmentsController.update').as('departments.update')
-  Route.get('/departments/delete/:id', 'DepartmentsController.destroy').as('departments.destroy')
+    Route.get('/departments', 'DepartmentsController.index').as('departments.index')
+    Route.get('/departments/new', 'DepartmentsController.create').as('departments.create')
+    Route.post('/departments/new', 'DepartmentsController.store').as('departments.store')
+    Route.get('/departments/edit/:id', 'DepartmentsController.edit').as('departments.edit')
+    Route.post('/departments/edit/:id', 'DepartmentsController.update').as('departments.update')
+    Route.get('/departments/delete/:id', 'DepartmentsController.destroy').as('departments.destroy')
+
+    Route.get('/registeruser/new', 'AuthController.index').as('register.index')
+    Route.post('/registeruser/new', 'AuthController.store').as('users.store')
+
+    Route.get('/', 'UsersController.index').as('users.index')
+    Route.get('/edit/:id', 'UsersController.edit').as('user.edit')
+    Route.post('/edit/:id', 'UsersController.update').as('user.update')
+    Route.post('/edit/active/:id', 'UsersController.inactiveUser').as('user.active.update')
+    Route.get('/delete/:id', 'UsersController.destroy').as('user.destroy')
+  }).middleware(['auth', 'admin'])
 
   Route.post('/logout', 'AuthController.logout').as('users.logout')
-  Route.get('/registeruser/new', 'AuthController.index').as('register.index')
-  Route.post('/registeruser/new', 'AuthController.store').as('users.store')
-
-  Route.get('/', 'UsersController.index').as('users.index')
-  Route.get('/edit/:id', 'UsersController.edit').as('user.edit')
-  Route.post('/edit/:id', 'UsersController.update').as('user.update')
-  Route.post('/edit/active/:id', 'UsersController.inactiveUser').as('user.active.update')
-  Route.get('/delete/:id', 'UsersController.destroy').as('user.destroy')
-
 
   Route.get('/profile/:id', 'ProfilesController.index').as('user.profile.index')
   Route.get('/profile/edit/:id', 'ProfilesController.edit').as('user.profile.edit')
@@ -89,7 +91,7 @@ Route.group(() => {
 })
 .prefix('users')
 .namespace('App/Controllers/Http')
-.middleware('auth')
+.middleware(['auth'])
 
 Route.group(() => {
   Route.get('/login', 'AuthController.showLogin').as('users.show.login')

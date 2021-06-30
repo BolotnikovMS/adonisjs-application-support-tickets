@@ -77,20 +77,23 @@ export default class User extends BaseModel {
     }
   }
 
-  @manyToMany(() => Role, {
-    pivotTable: 'info_users'
+  @hasMany(() => Role, {
+    foreignKey: 'id',
+    localKey: 'roleId'
   })
-  public role: ManyToMany<typeof Role>
+  public role: HasMany<typeof Role>
 
-  @manyToMany(() => Department, {
-    pivotTable: 'info_users'
+  @hasMany(() => Department, {
+    foreignKey: 'id',
+    localKey: 'departmentId'
   })
-  public department: ManyToMany<typeof Department>
+  public department: HasMany<typeof Department>
 
-  @manyToMany(() => Position, {
-    pivotTable: 'info_users'
+  @hasMany(() => Position, {
+    foreignKey: 'id',
+    localKey: 'positionId'
   })
-  public position: ManyToMany<typeof Position>
+  public position: HasMany<typeof Position>
 
   @hasMany(() => News, {
     foreignKey: 'user_id'
