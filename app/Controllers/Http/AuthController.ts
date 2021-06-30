@@ -7,7 +7,6 @@ import User from 'App/Models/User'
 import Department from 'App/Models/Department'
 import Position from 'App/Models/Position'
 import Role from 'App/Models/Role'
-import InfoUser from 'App/Models/InfoUser'
 export default class AuthController {
   public async index ({ view }: HttpContextContract) {
     const departments = await Department.all()
@@ -115,13 +114,6 @@ export default class AuthController {
     })
 
     const userId = await User.all()
-
-    await InfoUser.create({
-      userId: userId[0].id,
-      roleId: validateData.role,
-      departmentId: validateData.department,
-      positionId: validateData.position
-    })
 
     session.flash({ 'successmessage': `Пользователь: "${ validateData.surname } ${ validateData.name } ${ validateData.lastname }" был добавлен.` })
     return response.redirect('/users/')

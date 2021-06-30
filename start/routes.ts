@@ -31,22 +31,24 @@ Route.group(() => {
     Route.post('/edit/:id', 'NewsController.update').as('news.update')
     Route.get('/delete/:id', 'NewsController.destroy').as('news.destroy')
   })
-  .middleware('auth')
+  .middleware(['auth', 'admin'])
 })
 .namespace('App/Controllers/Http')
 
 Route.group(() => {
   // Type tickets
-  Route.get('/type/', 'TicketsController.indexType').as('index.type.all')
-  Route.get('/type/new', 'TicketsController.createType').as('type.ticket.create')
-  Route.post('/type/new', 'TicketsController.storeType').as('type.ticket.store')
-  Route.get('/type/edit/:id', 'TicketsController.editType').as('type.ticket.edit')
-  Route.post('/type/edit/:id', 'TicketsController.updateType').as('type.ticket.update')
-  Route.get('/type/delete/:id', 'TicketsController.destroyType').as('type.ticket.destroy')
+  Route.group(() => {
+    Route.get('/type/', 'TicketsController.indexType').as('index.type.all')
+    Route.get('/type/new', 'TicketsController.createType').as('type.ticket.create')
+    Route.post('/type/new', 'TicketsController.storeType').as('type.ticket.store')
+    Route.get('/type/edit/:id', 'TicketsController.editType').as('type.ticket.edit')
+    Route.post('/type/edit/:id', 'TicketsController.updateType').as('type.ticket.update')
+    Route.get('/type/delete/:id', 'TicketsController.destroyType').as('type.ticket.destroy')
 
-  Route.get('/', 'TicketsController.index').as('ticket.index')
-  Route.get('/show/:id', 'TicketsController.show').as('ticket.show')
-  Route.post('/show/:id', 'TicketsController.close').as('ticket.close')
+    Route.get('/', 'TicketsController.index').as('ticket.index')
+    Route.get('/show/:id', 'TicketsController.show').as('ticket.show')
+    Route.post('/show/:id', 'TicketsController.close').as('ticket.close')
+  }).middleware(['auth', 'admin'])
 
   // User tickets
   Route.get('/user/', 'TicketsController.indexUser').as('ticket.index.user')
@@ -102,18 +104,21 @@ Route.group(() => {
 
 Route.group(() => {
   // Type documents
-  Route.get('/type', 'DocumentsController.indexType').as('type.documents.index')
-  Route.get('/type/new', 'DocumentsController.createType').as('type.documents.create')
-  Route.post('/type/new', 'DocumentsController.storeType').as('type.documents.store')
-  Route.get('/type/edit/:id', 'DocumentsController.editType').as('type.documents.edit')
-  Route.post('/type/edit/:id', 'DocumentsController.updateType').as('type.documents.update')
-  Route.get('/type/delete/:id', 'DocumentsController.destroyType').as('type.documents.destroy')
+  Route.group(() => {
+    Route.get('/type', 'DocumentsController.indexType').as('type.documents.index')
+    Route.get('/type/new', 'DocumentsController.createType').as('type.documents.create')
+    Route.post('/type/new', 'DocumentsController.storeType').as('type.documents.store')
+    Route.get('/type/edit/:id', 'DocumentsController.editType').as('type.documents.edit')
+    Route.post('/type/edit/:id', 'DocumentsController.updateType').as('type.documents.update')
+    Route.get('/type/delete/:id', 'DocumentsController.destroyType').as('type.documents.destroy')
+
+    Route.get('/new', 'DocumentsController.create').as('documents.create')
+    Route.post('/new', 'DocumentsController.store').as('documents.store')
+    Route.get('/delete/:id', 'DocumentsController.destroy').as('documents.destroy')
+  }).middleware(['auth', 'admin'])
 
   // Document
   Route.get('/', 'DocumentsController.index').as('documents.index')
-  Route.get('/new', 'DocumentsController.create').as('documents.create')
-  Route.post('/new', 'DocumentsController.store').as('documents.store')
-  Route.get('/delete/:id', 'DocumentsController.destroy').as('documents.destroy')
 })
 .prefix('documents')
 .namespace('App/Controllers/Http')

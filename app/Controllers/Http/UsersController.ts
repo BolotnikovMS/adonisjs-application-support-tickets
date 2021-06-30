@@ -22,7 +22,6 @@ export default class UsersController {
 
     users.baseUrl('/users/')
 
-    return users
     return view.render('pages/admin_users/users', {
       title: 'Все пользователи',
       users
