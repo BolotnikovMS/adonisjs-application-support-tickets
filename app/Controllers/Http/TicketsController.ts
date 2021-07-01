@@ -94,7 +94,11 @@ export default class TicketsController {
     })
 
     session.flash({ 'successmessage': `Заявка с темой: "${ file.topic }" была отправлена.` })
-    return response.redirect('/ticket')
+    if (auth.user.roleId === 1) {
+      return response.redirect('/ticket')
+    } else {
+      return response.redirect('/ticket/user')
+    }
   }
 
   public async show ({ view, params }: HttpContextContract) {
