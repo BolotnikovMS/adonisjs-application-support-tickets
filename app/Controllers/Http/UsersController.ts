@@ -175,11 +175,8 @@ export default class UsersController {
     const search = request.input('search').trim()
     const searchResult = await User
       .query()
-      .where((query) => {
-        query
-          .where('surname', 'like', `%${search}%`)
-          .orWhere('name', 'like', `%${search}%`)
-      })
+      .where('surname', 'like', `%${search}%`)
+      .orWhere('name', 'like', `%${search}%`)
 
     return view.render('pages/admin_users/search', {
       title: 'Результаты поиска',
