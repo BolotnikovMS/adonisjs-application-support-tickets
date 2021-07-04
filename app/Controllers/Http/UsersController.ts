@@ -12,7 +12,7 @@ import fs from 'fs'
 export default class UsersController {
   public async index ({ view, request }: HttpContextContract) {
     const page = request.input('page', 1)
-    const limit = 2
+    const limit = 15
     const users = await User
       .query()
       .preload('position')
