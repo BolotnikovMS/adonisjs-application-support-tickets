@@ -181,7 +181,6 @@ export default class UsersController {
       'search.required': 'Поле является обязательным.',
       'search.minLength': 'Минимальная длинна поля 3 символа.',
     }
-
     const validateData = await request.validate({
       schema: validSchema,
       messages: messages
@@ -189,6 +188,7 @@ export default class UsersController {
 
     const search = validateData.search.split(' ')
     let searchResult
+
     if (search.length > 1) {
       searchResult = await User
         .query()
