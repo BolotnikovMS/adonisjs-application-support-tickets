@@ -12,7 +12,7 @@ import fs from 'fs'
 export default class UsersController {
   public async index ({ view, request }: HttpContextContract) {
     const page = request.input('page', 1)
-    const limit = 15
+    const limit = 2
     const users = await User
       .query()
       .preload('position')
@@ -169,5 +169,11 @@ export default class UsersController {
 
     session.flash({ 'successmessage': `Пользователь: "${user?.surname} ${user?.name} ${user?.lastname}" был удален.` });
     response.redirect('/users/')
+  }
+
+  public async searchUser ({ request }: HttpContextContract) {
+    const search = request.only(['search'])
+
+    
   }
 }
