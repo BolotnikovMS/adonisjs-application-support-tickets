@@ -172,11 +172,18 @@ export default class UsersController {
   }
 
   public async searchUser ({ request, view }: HttpContextContract) {
-    const search = request.input('search').trim()
-    const searchResult = await User
-      .query()
-      .where('surname', 'like', `%${search}%`)
-      .orWhere('name', 'like', `%${search}%`)
+    const search = request.input('search').trim().split(' ')
+    let searchResult
+    if (search.length > 1) {
+      searchResult = await User
+        .query()
+          .whereIn(['surname', 'name'], [search])
+    } else {
+      searchResult = await User
+        .query()
+          .where('surname', 'like', `%${search}%`)
+          .orWhere('name', 'like', `%${search}%`)
+    }
 
     return view.render('pages/admin_users/search', {
       title: 'Результаты поиска',
