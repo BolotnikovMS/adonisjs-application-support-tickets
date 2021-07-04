@@ -172,7 +172,22 @@ export default class UsersController {
   }
 
   public async searchUser ({ request, view }: HttpContextContract) {
-    const search = request.input('search').trim().split(' ')
+    const validSchema = schema.create({
+      search: schema.string({trim: true, escape: true}, [
+        rules.minLength(3)
+      ])
+    })
+    const messages = {
+      'search.required': 'Поле является обязательным.',
+      'search.minLength': 'Минимальная длинна поля 3 символа.',
+    }
+
+    const validateData = await request.validate({
+      schema: validSchema,
+      messages: messages
+    })
+
+    const search = validateData.search.split(' ')
     let searchResult
     if (search.length > 1) {
       searchResult = await User
