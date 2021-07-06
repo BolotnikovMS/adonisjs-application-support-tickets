@@ -1,10 +1,10 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
+import { schema, rules } from '@ioc:Adonis/Core/Validator'
 
 import News from 'App/Models/News'
 
 export default class NewsController {
-  public async index ({ view, request, auth }: HttpContextContract) {
+  public async index ({ view, request }: HttpContextContract) {
     const page = request.input('page', 1)
     const limit = 4
 

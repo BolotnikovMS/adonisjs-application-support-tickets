@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel, manyToMany, ManyToMany, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
+import { column, beforeSave, BaseModel, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
 
 import Role from './Role'
 import Position from './Position'
@@ -55,7 +55,7 @@ export default class User extends BaseModel {
 
   @column.dateTime({
     autoCreate: true,
-    serialize: (value?: DataTime) => {
+    serialize: (value?: DateTime) => {
       return value ? value.toFormat('HH:mm dd.MM.yyyy') : value
     }
   })
@@ -64,7 +64,7 @@ export default class User extends BaseModel {
   @column.dateTime({
     autoCreate: true,
     autoUpdate: true,
-    serialize: (value?: DataTime) => {
+    serialize: (value?: DateTime) => {
       return value ? value.toFormat('HH:mm dd.MM.yyyy') : value
     }
   })

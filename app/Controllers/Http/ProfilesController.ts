@@ -1,11 +1,11 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
+import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import Hash from '@ioc:Adonis/Core/Hash'
 
 import User from 'App/Models/User'
 
 export default class ProfilesController {
-  public async index ({ params, response, view }: HttpContextContract) {
+  public async index ({ params, view }: HttpContextContract) {
     const user = await User.query()
       .where('id', '=', params.id)
       .preload('department')

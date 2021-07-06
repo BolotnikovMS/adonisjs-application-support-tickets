@@ -1,5 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
+import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import Application from '@ioc:Adonis/Core/Application'
 
 import TypeTicket from 'App/Models/TypeTicket'
@@ -90,7 +90,7 @@ export default class TicketsController {
     })
 
     session.flash({ 'successmessage': `Заявка с темой: "${ validateData.topic }" была отправлена.` })
-    if (auth.user.roleId === 1) {
+    if (auth.user?.roleId === 1) {
       return response.redirect('/ticket')
     } else {
       return response.redirect('/ticket/user')

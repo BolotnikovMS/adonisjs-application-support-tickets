@@ -10,7 +10,7 @@ export default class TypeTicket extends BaseModel {
 
   @column.dateTime({
     autoCreate: true,
-    serialize: (value?: DataTime) => {
+    serialize: (value?: DateTime) => {
       return value ? value.toFormat('HH:mm dd.MM.yyyy') : value
     }
   })
@@ -19,7 +19,7 @@ export default class TypeTicket extends BaseModel {
   @column.dateTime({
     autoCreate: true,
     autoUpdate: true,
-    serialize: (value?: DataTime) => {
+    serialize: (value?: DateTime) => {
       return value ? value.toFormat('HH:mm dd.MM.yyyy') : value
     }
   })

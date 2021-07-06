@@ -1,5 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { schema, validator, rules } from '@ioc:Adonis/Core/Validator'
+import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import Application from '@ioc:Adonis/Core/Application'
 import Hash from '@ioc:Adonis/Core/Hash'
 
@@ -112,8 +112,6 @@ export default class AuthController {
       password: validateData.password,
       vip: validateData.vip
     })
-
-    const userId = await User.all()
 
     session.flash({ 'successmessage': `Пользователь: "${ validateData.surname } ${ validateData.name } ${ validateData.lastname }" был добавлен.` })
     return response.redirect('/users/')
