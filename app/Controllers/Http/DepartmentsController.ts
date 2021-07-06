@@ -18,44 +18,46 @@ export default class DepartmentsController {
   }
 
   public async store ({ request, response, session }: HttpContextContract) {
-    const department = {...request.only(['name', 'number', 'housing'])}
-
-    await validator.validate({
-      schema: schema.create({
-        name: schema.string({trim: true},
-        [
-          rules.minLength(2),
-          rules.maxLength(80)
-        ]),
-        number: schema.string.optional({trim: true},
-        [
-          rules.maxLength(10)
-        ]),
-        housing: schema.string.optional({trim: true},
-        [
-          rules.minLength(1),
-          rules.maxLength(180)
-        ])
-      }),
-      data: department,
-      messages: {
-        'name.required': 'Поле "Название" является обязательным.',
-        'name.minLength': 'Минимальная длинна поля 2 символа.',
-        'name.maxLength': 'Максимальная длинна поля 80 символов.',
-        'number.maxLength': 'Максимальная длинна поля 10 символов.',
-        'housing.minLength': 'Минимальная длинна поля 1 символа.',
-        'housing.maxLength': 'Максимальная длинна поля 180 символов.'
-      }
+    const validSchema = schema.create({
+      name: schema.string({
+        trim: true,
+        escape: true
+      }, [
+        rules.minLength(2),
+        rules.maxLength(80)
+      ]),
+      number: schema.string.optional({
+        trim: true,
+        escape: true
+      }, [
+        rules.maxLength(10)
+      ]),
+      housing: schema.string.optional({
+        trim: true,
+        escape: true
+      }, [
+        rules.minLength(1),
+        rules.maxLength(180)
+      ])
+    })
+    const messages = {
+      'name.required': 'Поле "Название" является обязательным.',
+      'name.minLength': 'Минимальная длинна поля 2 символа.',
+      'name.maxLength': 'Максимальная длинна поля 80 символов.',
+      'number.maxLength': 'Максимальная длинна поля 10 символов.',
+      'housing.minLength': 'Минимальная длинна поля 1 символа.',
+      'housing.maxLength': 'Максимальная длинна поля 180 символов.'
+    }
+    const validateData = await request.validate({
+      schema: validSchema,
+      messages: messages
     })
 
-    await Department.create(department)
+    await Department.create(validateData)
 
-    session.flash('successmessage', `Отдел "${department.name}" успешно добавлен.`)
+    session.flash('successmessage', `Отдел "${validateData.name}" успешно добавлен.`)
     response.redirect('/users/departments')
   }
-
-  // public async show ({}: HttpContextContract) {
-  // }
 
   public async edit ({ view, params }: HttpContextContract) {
     const department = await Department.findOrFail(params.id)
@@ -67,6 +69,41 @@ export default class DepartmentsController {
   }
 
   public async update ({ params, request, response, session }: HttpContextContract) {
+    const validSchema = schema.create({
+      name: schema.string({
+        trim: true,
+        escape: true
+      }, [
+        rules.minLength(2),
+        rules.maxLength(80)
+      ]),
+      number: schema.string.optional({
+        trim: true,
+        escape: true
+      }, [
+        rules.maxLength(10)
+      ]),
+      housing: schema.string.optional({
+        trim: true,
+        escape: true
+      }, [
+        rules.minLength(1),
+        rules.maxLength(180)
+      ])
+    })
+    const messages = {
+      'name.required': 'Поле "Название" является обязательным.',
+      'name.minLength': 'Минимальная длинна поля 2 символа.',
+      'name.maxLength': 'Максимальная длинна поля 80 символов.',
+      'number.maxLength': 'Максимальная длинна поля 10 символов.',
+      'housing.minLength': 'Минимальная длинна поля 1 символа.',
+      'housing.maxLength': 'Максимальная длинна поля 180 символов.'
+    }
+    const validateData = await request.validate({
+      schema: validSchema,
+      messages: messages
+    })
+
     await request.validate({
       schema: schema.create({
         name: schema.string({trim: true},
@@ -95,12 +132,11 @@ export default class DepartmentsController {
     })
 
     const department = await Department.findOrFail(params.id)
-    const { name, number, housing } = request.only(['name', 'number', 'housing'])
 
     if (department) {
-      department.name = name.trim()
-      department.number = number.trim()
-      department.housing = housing.trim()
+      department.name = validateData.name
+      department.number = validateData.number
+      department.housing = validateData.housing
       await department?.save()
     }
 
