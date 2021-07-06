@@ -40,6 +40,7 @@ export default class DepartmentsController {
         rules.maxLength(180)
       ])
     })
+
     const messages = {
       'name.required': 'Поле "Название" является обязательным.',
       'name.minLength': 'Минимальная длинна поля 2 символа.',
@@ -48,6 +49,7 @@ export default class DepartmentsController {
       'housing.minLength': 'Минимальная длинна поля 1 символа.',
       'housing.maxLength': 'Максимальная длинна поля 180 символов.'
     }
+
     const validateData = await request.validate({
       schema: validSchema,
       messages: messages
@@ -91,6 +93,7 @@ export default class DepartmentsController {
         rules.maxLength(180)
       ])
     })
+
     const messages = {
       'name.required': 'Поле "Название" является обязательным.',
       'name.minLength': 'Минимальная длинна поля 2 символа.',
@@ -99,6 +102,7 @@ export default class DepartmentsController {
       'housing.minLength': 'Минимальная длинна поля 1 символа.',
       'housing.maxLength': 'Максимальная длинна поля 180 символов.'
     }
+
     const validateData = await request.validate({
       schema: validSchema,
       messages: messages

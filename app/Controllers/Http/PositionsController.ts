@@ -13,10 +13,6 @@ export default class PositionsController {
 
     positions.baseUrl('/users/positions')
 
-    // console.log(positions.getMeta());
-    // console.log(positions.firstPage);
-    // console.log(positions.getPreviousPageUrl());
-    // console.log(positions.hasPages);
     return view.render('pages/position/position', {
       title: 'Должности',
       positions
@@ -28,33 +24,39 @@ export default class PositionsController {
   }
 
   public async store ({ request, response, session }: HttpContextContract) {
-    const position = {...request.only(['name', 'vip'])}
-
-    position.vip == 1 ? position.vip = 1 : position.vip = 0
-
-    await validator.validate({
-      schema: schema.create({
-        name: schema.string({
-          escape: true,
-          trim: true
-        },
-        [
-          rules.minLength(3),
-          rules.maxLength(80)
-        ]),
-        vip: schema.boolean.optional()
-      }),
-      data: position,
-      messages: {
-        'name.required': 'Поле "Название" является обязательным.',
-        'name.minLength': 'Минимальная длинна поля 3 символа.',
-        'name.maxLength': 'Максимальная длинна поля 80 символов.'
-      }
+    const validSchema = schema.create({
+      name: schema.string({
+        trim: true,
+        escape: true
+      }, [
+        rules.minLength(2),
+        rules.maxLength(80)
+      ]),
+      vip: schema.boolean.optional()
     })
 
-    await Position.create(position)
+    const messages = {
+      'name.required': 'Поле "Название" является обязательным.',
+      'name.minLength': 'Минимальная длинна поля 3 символа.',
+      'name.maxLength': 'Максимальная длинна поля 80 символов.'
+    }
 
-    session.flash('successmessage', `Тип "${position.name}" успешно добавлен.`)
+    const validateData = await request.validate({
+      schema: validSchema,
+      messages: messages
+    })
+
+    const position = request.only(['vip'])
+
+    position.vip == 1 ? position.vip = 1 : position.vip = 0
+    validateData.vip = position.vip
+
+    await Position.create({
+      name: validateData.name,
+      vip: validateData.vip
+    })
+
+    session.flash('successmessage', `Тип "${validateData.name}" успешно добавлен.`)
     response.redirect('/users/positions')
   }
 
@@ -68,33 +70,36 @@ export default class PositionsController {
   }
 
   public async update ({ params, request, response, session }: HttpContextContract) {
-    await request.validate({
-      schema: schema.create({
-        name: schema.string({
-          escape: true,
-          trim: true
-        },
-        [
-          rules.minLength(3),
-          rules.maxLength(80)
-        ]),
-        vip: schema.boolean.optional()
-      }),
-      messages: {
-        'name.required': 'Поле "Название" является обязательным.',
-        'name.minLength': 'Минимальная длинна поля 3 символа.',
-        'name.maxLength': 'Максимальная длинна поля 80 символов.'
-      }
+    const validSchema = schema.create({
+      name: schema.string({
+        trim: true,
+        escape: true
+      }, [
+        rules.minLength(2),
+        rules.maxLength(80)
+      ]),
+      vip: schema.boolean.optional()
+    })
+
+    const messages = {
+      'name.required': 'Поле "Название" является обязательным.',
+      'name.minLength': 'Минимальная длинна поля 3 символа.',
+      'name.maxLength': 'Максимальная длинна поля 80 символов.'
+    }
+
+    const validateData = await request.validate({
+      schema: validSchema,
+      messages: messages
     })
 
     const position = await Position.findOrFail(params.id)
-    let { name, vip } = request.only(['name', 'vip'])
-
-    vip == 1 ? vip = 1 : vip = 0
+    const positionVip = request.only(['vip'])
+    positionVip.vip == 1 ? positionVip.vip = 1 : positionVip.vip = 0
+    validateData.vip = positionVip.vip
 
     if (position) {
-      position.name = name.trim()
-      position.vip = vip
+      position.name = validateData.name
+      position.vip = validateData.vip
 
       await position?.save()
     }

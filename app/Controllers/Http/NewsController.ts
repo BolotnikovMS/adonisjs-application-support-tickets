@@ -30,15 +30,13 @@ export default class NewsController {
 
   public async store ({ request, response, session, auth }: HttpContextContract) {
     const validSchema = schema.create({
-      topic: schema.string({trim: true},
-      [
+      topic: schema.string({trim: true}, [
         rules.minLength(3),
         rules.maxLength(100)
       ]),
       textNews: schema.string({
         trim: true
-      },
-      [
+      }, [
         rules.minLength(3)
       ])
     })
@@ -85,15 +83,13 @@ export default class NewsController {
 
   public async update ({ request, response, params, session }: HttpContextContract) {
     const validSchema = schema.create({
-      topic: schema.string({trim: true},
-      [
+      topic: schema.string({trim: true}, [
         rules.minLength(3),
         rules.maxLength(100)
       ]),
       textNews: schema.string({
         trim: true
-      },
-      [
+      }, [
         rules.minLength(3)
       ])
     })

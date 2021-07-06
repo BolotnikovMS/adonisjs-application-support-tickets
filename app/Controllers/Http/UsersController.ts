@@ -121,13 +121,13 @@ export default class UsersController {
     validateData.active ? validateData.active = false : validateData.active = true
 
     if (user) {
-      user.surname = validateData.surname.trim()
-      user.name = validateData.name.trim()
-      user.lastname = validateData.lastname.trim()
-      user.email = userUpdate.email.trim()
-      user.avatar = validateData.avatar?.fileName,
-      user.work_phone = validateData.workPhone?.trim()
-      user.mobile_phone = validateData.mobilePhone?.trim()
+      user.surname = validateData.surname
+      user.name = validateData.name
+      user.lastname = validateData.lastname
+      user.email = userUpdate.email
+      user.avatar = validateData.avatar?.fileName
+      user.work_phone = validateData.workPhone
+      user.mobile_phone = validateData.mobilePhone
       user.positionId = validateData.position
       user.departmentId = validateData.department
       user.roleId = validateData.role

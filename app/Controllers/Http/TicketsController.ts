@@ -40,13 +40,11 @@ export default class TicketsController {
 
   public async store ({ auth, request, response, session }: HttpContextContract) {
     const validSchema = schema.create({
-      topic: schema.string({trim: true},
-      [
+      topic: schema.string({trim: true}, [
         rules.minLength(3),
         rules.maxLength(80)
       ]),
-      description: schema.string({trim: true},
-      [
+      description: schema.string({trim: true}, [
         rules.minLength(3)
       ]),
       typeReq: schema.number(),
@@ -67,33 +65,31 @@ export default class TicketsController {
       'fileIn.file.extname': 'Загружаемый файл должен иметь одно из следующих расширений: {{ options.extnames }}'
     }
 
-    const file = await request.validate({
+    const validateData = await request.validate({
       schema: validSchema,
       messages
     })
 
-    const fileNameOld = file.fileIn?.clientName
+    const fileNameOld = validateData.fileIn?.clientName
 
-    if (file.fileIn) {
-      await file.fileIn.move(Application.publicPath('uploads/tickets'), {
-        name: `${new Date().getTime()}.${file.fileIn.extname}`
+    if (validateData.fileIn) {
+      await validateData.fileIn.move(Application.publicPath('uploads/tickets'), {
+        name: `${new Date().getTime()}.${validateData.fileIn.extname}`
       })
-
-      // fileName = file.fileIn.fileName
     }
 
     await Ticket.create({
-      topic: file.topic,
-      description: file.description,
-      file_name_new: file.fileIn?.fileName,
+      topic: validateData.topic,
+      description: validateData.description,
+      file_name_new: validateData.fileIn?.fileName,
       file_name_old: fileNameOld,
-      file_extname: file.fileIn?.extname,
-      id_ticket_type: file.typeReq,
+      file_extname: validateData.fileIn?.extname,
+      id_ticket_type: validateData.typeReq,
       id_user: auth.user?.id,
       status: 'Open'
     })
 
-    session.flash({ 'successmessage': `Заявка с темой: "${ file.topic }" была отправлена.` })
+    session.flash({ 'successmessage': `Заявка с темой: "${ validateData.topic }" была отправлена.` })
     if (auth.user.roleId === 1) {
       return response.redirect('/ticket')
     } else {
@@ -126,7 +122,7 @@ export default class TicketsController {
 
     if (ticket) {
       ticket.status = request.input('status')
-      ticket.working_hours = validateData.time
+      ticket.working_hours = +validateData.time
       ticket.id_user_closed = auth.user?.id
 
       await ticket.save()
@@ -175,30 +171,30 @@ export default class TicketsController {
   }
 
   public async storeType ({ request, response, session }: HttpContextContract) {
-    const type = {...request.only(['name'])}
-
-    await validator.validate({
-      schema: schema.create({
-        name: schema.string({
-          escape: true,
-          trim: true
-        },
-        [
-          rules.minLength(2),
-          rules.maxLength(50)
-        ])
-      }),
-      data: type,
-      messages: {
-        'name.required': 'Поле "Название" является обязательным.',
-        'name.minLength': 'Минимальная длинна поля 2 символа.',
-        'name.maxLength': 'Максимальная длинна поля 50 символов.'
-      }
+    const validSchema = schema.create({
+      name: schema.string({
+        trim: true,
+        escape: true
+      }, [
+        rules.minLength(2),
+        rules.maxLength(80)
+      ])
     })
 
-    await TypeTicket.create(type)
+    const messages = {
+      'name.required': 'Поле "Название" является обязательным.',
+      'name.minLength': 'Минимальная длинна поля 2 символа.',
+      'name.maxLength': 'Максимальная длинна поля 80 символов.'
+    }
 
-    session.flash('successmessage', `Тип "${type.name}" успешно добавлен.`)
+    const validateData = await request.validate({
+      schema: validSchema,
+      messages: messages
+    })
+
+    await TypeTicket.create(validateData)
+
+    session.flash('successmessage', `Тип "${validateData.name}" успешно добавлен.`)
     response.redirect('/ticket/type')
   }
 
@@ -212,33 +208,35 @@ export default class TicketsController {
   }
 
   public async updateType ({ params, request, response, session }: HttpContextContract) {
-    await request.validate({
-      schema: schema.create({
-        name: schema.string({
-          escape: true,
-          trim: true
-        },
-        [
-          rules.minLength(2),
-          rules.maxLength(50)
-        ])
-      }),
-      messages: {
-        'name.required': 'Поле "Название" является обязательным.',
-        'name.minLength': 'Минимальная длинна поля 2 символа.',
-        'name.maxLength': 'Максимальная длинна поля 50 символов.'
-      }
+    const validSchema = schema.create({
+      name: schema.string({
+        trim: true,
+        escape: true
+      }, [
+        rules.minLength(2),
+        rules.maxLength(80)
+      ])
+    })
+
+    const messages = {
+      'name.required': 'Поле "Название" является обязательным.',
+      'name.minLength': 'Минимальная длинна поля 2 символа.',
+      'name.maxLength': 'Максимальная длинна поля 80 символов.'
+    }
+
+    const validateData = await request.validate({
+      schema: validSchema,
+      messages: messages
     })
 
     const type = await TypeTicket.findOrFail(params.id)
-    const { name } = request.only(['name'])
 
     if (type) {
-      type.name = name.trim()
+      type.name = validateData.name
       await type?.save()
     }
 
-    session.flash('successmessage', `Тип "${type?.name}" успешно обновлен.`)
+    session.flash('successmessage', `Тип "${validateData?.name}" успешно обновлен.`)
     return response.redirect('/ticket/type');
   }
 
